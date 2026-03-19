@@ -29,11 +29,16 @@ def limitarJunta(nombreJunta: str, valor: float) -> float:
 
 # Construye el payload JSON para enviar comandos
 def construirPayload(tipoComando: str, cuerpo: Dict[str, Any]) -> str:
+    mapa_tipos = {
+        "comando_juntas": "joint_command",
+        "comando_modo": "mode_command",
+        "comando_pid": "pid_command",
+    }
     payload = {
-        "tipo": tipoComando,
+        "type": mapa_tipos.get(tipoComando, tipoComando),
         "timestamp": ahoraUtc(),
-        "fuente": "panel_mqtt",
-        "cuerpo": cuerpo,
+        "source": "panel_mqtt",
+        "body": cuerpo,
     }
     return json.dumps(payload, ensure_ascii=True)
 
@@ -131,8 +136,9 @@ def obtenerRuntime() -> RuntimePuenteMqtt:
 
 # Envía los valores de las juntas
 def enviarJuntas(runtime: RuntimePuenteMqtt, valores: Dict[str, float]) -> None:
-    cuerpo = {nombreJunta: limitarJunta(nombreJunta, valor) for nombreJunta, valor in valores.items()}
-    payload = construirPayload("comando_juntas", {"juntas": cuerpo})
+    import math
+    cuerpo = {nombreJunta: math.radians(limitarJunta(nombreJunta, valor)) for nombreJunta, valor in valores.items()}
+    payload = construirPayload("comando_juntas", {"joints": cuerpo})
     runtime.publicar(Configuracion.TOPIC_COMMAND, payload)
 
 

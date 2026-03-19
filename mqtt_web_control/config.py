@@ -41,7 +41,7 @@ class Settings:
 
 
 JOINT_LIMITS = {
-    "JointBase": {"min": -182.0, "max": -2.0, "default": -2.0},
+    "JointBase": {"min": -180.0, "max": 180.0, "default": 0.0},
     "JointHombro": {"min": -90.0, "max": 90.0, "default": 0.0},
     "JointCodo": {"min": -135.0, "max": 135.0, "default": 0.0},
 }
