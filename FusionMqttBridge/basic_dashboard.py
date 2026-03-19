@@ -225,6 +225,20 @@ class ClienteMqtt:
         payload = construir_payload("comando_modo", {"mode": modo})
         self.publicar(temas["modo"], payload)
 
+    def enviar_pid(self, valores: Dict[str, Any]):
+        """Envia parametros PID para una junta."""
+        payload = construir_payload("comando_pid", {
+            "joint":      str(valores["joint"]),
+            "enabled":    bool(valores.get("enabled", True)),
+            "kp":         float(valores["kp"]),
+            "ki":         float(valores["ki"]),
+            "kd":         float(valores["kd"]),
+            "setpoint":   float(valores["setpoint"]),
+            "tolerance_deg":  max(0.01, float(valores.get("tolerance_deg", 0.6))),
+            "settle_cycles":  max(1, int(valores.get("settle_cycles", 3))),
+        })
+        self.publicar(temas.get("pid", "robotarm/pid"), payload)
+
 
 def principal():
     """Funcion principal del dashboard Streamlit."""
@@ -271,7 +285,7 @@ def principal():
         st.text(f"Puerto: {config_mqtt['port']}")
         st.text(f"Topic cmd: {temas['comando']}")
 
-    # Controles principales
+    # ── Control de Juntas ────────────────────────────────────────────────────
     st.subheader("Control de Juntas")
 
     col1, col2 = st.columns([3, 1])
@@ -313,6 +327,58 @@ def principal():
                 st.warning("STOP enviado")
             except Exception as e:
                 st.error(f"Error: {e}")
+
+    st.divider()
+
+    # ── Control PID ──────────────────────────────────────────────────────────
+    st.subheader("Control PID")
+    nombres_juntas = list(limites_juntas.keys())
+
+    pid_col1, pid_col2 = st.columns(2)
+    with pid_col1:
+        junta_pid = st.selectbox("Junta", options=nombres_juntas)
+        kp = st.number_input("Kp", value=2.0, step=0.01, format="%.3f")
+        ki = st.number_input("Ki", value=0.1, step=0.01, format="%.3f")
+        kd = st.number_input("Kd", value=0.05, step=0.01, format="%.3f")
+    with pid_col2:
+        lim = limites_juntas[junta_pid]
+        setpoint = st.number_input(
+            "Setpoint (grados)",
+            min_value=float(lim["min"]),
+            max_value=float(lim["max"]),
+            value=float(lim["default"]),
+            step=1.0,
+        )
+        tolerancia = st.number_input("Tolerancia (grados)", min_value=0.01, value=0.6, step=0.1)
+        ciclos = st.number_input("Ciclos estabilizacion", min_value=1, value=3, step=1)
+        pid_habilitado = st.checkbox("Habilitado", value=True)
+
+    pid_btn_col1, pid_btn_col2 = st.columns(2)
+    with pid_btn_col1:
+        if st.button("Enviar PID", use_container_width=True, type="primary"):
+            try:
+                cliente.enviar_pid({
+                    "joint": junta_pid, "enabled": pid_habilitado,
+                    "kp": kp, "ki": ki, "kd": kd,
+                    "setpoint": setpoint,
+                    "tolerance_deg": tolerancia, "settle_cycles": int(ciclos),
+                })
+                st.success(f"PID enviado a {junta_pid}")
+            except Exception as e:
+                st.error(f"Error: {e}")
+    with pid_btn_col2:
+        if st.button("Detener PID", use_container_width=True):
+            try:
+                cliente.enviar_pid({
+                    "joint": junta_pid, "enabled": False,
+                    "kp": kp, "ki": ki, "kd": kd, "setpoint": setpoint,
+                    "tolerance_deg": tolerancia, "settle_cycles": int(ciclos),
+                })
+                st.info(f"PID detenido en {junta_pid}")
+            except Exception as e:
+                st.error(f"Error: {e}")
+
+    st.divider()
 
     # Info de uso
     with st.expander("ℹ️ Instrucciones de uso"):

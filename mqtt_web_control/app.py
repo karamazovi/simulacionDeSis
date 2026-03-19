@@ -1,5 +1,6 @@
 
 # Panel de control MQTT para el robot
+import asyncio
 import json
 import os
 import threading
@@ -11,6 +12,69 @@ import paho.mqtt.client as mqtt
 import streamlit as st
 
 from config import JOINT_LIMITS as limitesJuntas, PID_DEFAULTS as pidPorDefecto, Settings as Configuracion
+
+# ── Broker MQTT embebido ──────────────────────────────────────────────────────
+try:
+    from amqtt.broker import Broker as _MqttBroker
+    _BROKER_DISPONIBLE = True
+except ImportError:
+    _BROKER_DISPONIBLE = False
+
+_CONFIG_BROKER = {
+    "listeners": {"default": {"type": "tcp", "bind": f"0.0.0.0:{Configuracion.MQTT_PORT}"}},
+    "timeout-disconnect-delay": 2,
+    "auth": {"allow-anonymous": True},
+}
+
+
+class _BrokerEmbebido:
+    _instancia = None
+    _lock = threading.Lock()
+
+    def __new__(cls):
+        with cls._lock:
+            if cls._instancia is None:
+                cls._instancia = super().__new__(cls)
+                cls._instancia._iniciado = False
+            return cls._instancia
+
+    def __init__(self):
+        if hasattr(self, "_init_done"):
+            return
+        self._init_done = True
+        self.corriendo = False
+        self.hilo = None
+
+    def iniciar(self):
+        if self.corriendo or not _BROKER_DISPONIBLE:
+            return self.corriendo
+        listo = threading.Event()
+
+        def run():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+            async def main():
+                broker = _MqttBroker(_CONFIG_BROKER)
+                await broker.start()
+                self.corriendo = True
+                listo.set()
+                while self.corriendo:
+                    await asyncio.sleep(0.5)
+                await broker.shutdown()
+
+            try:
+                loop.run_until_complete(main())
+            except Exception as e:
+                print(f"Error broker: {e}")
+                listo.set()
+            finally:
+                loop.close()
+
+        self.hilo = threading.Thread(target=run, daemon=True)
+        self.hilo.start()
+        listo.wait(timeout=5)
+        return self.corriendo
 
 
 
@@ -176,15 +240,24 @@ def enviarModo(runtime: RuntimePuenteMqtt, nombreModo: str) -> None:
 # Interfaz principal de Streamlit
 def principal() -> None:
     st.set_page_config(page_title="Panel MQTT Robot", layout="wide")
+
+    # Broker embebido (singleton)
+    if "broker" not in st.session_state:
+        broker = _BrokerEmbebido()
+        activo = broker.iniciar()
+        st.session_state["broker"] = broker
+        st.session_state["broker_activo"] = activo
+
     runtime = obtenerRuntime()
 
     st.title("Panel MQTT Robot")
     st.caption("Panel 100% Python con Streamlit. No HTML/CSS manual.")
 
-    c1, c2 = st.columns(2)
+    c1, c2, c3 = st.columns(3)
     estado = runtime.obtenerEstado()
-    c1.metric("MQTT", "Conectado" if estado.get("mqttConectado") else "Desconectado")
-    c2.caption(f"Broker: {Configuracion.MQTT_HOST}:{Configuracion.MQTT_PORT}")
+    c1.metric("MQTT Cliente", "Conectado" if estado.get("mqttConectado") else "Desconectado")
+    c2.metric("Broker", "Activo" if st.session_state.get("broker_activo") else ("No disponible" if not _BROKER_DISPONIBLE else "Iniciando"))
+    c3.caption(f"Broker: {Configuracion.MQTT_HOST}:{Configuracion.MQTT_PORT}")
 
     if estado.get("ultimoError"):
         st.warning(str(estado["ultimoError"]))
