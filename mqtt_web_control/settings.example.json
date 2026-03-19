@@ -1,0 +1,21 @@
+{
+  "dashboard": {
+    "host": "127.0.0.1",
+    "port": 8501,
+    "debug": false
+  },
+  "mqtt": {
+    "host": "localhost",
+    "port": 1883,
+    "username": "",
+    "password": "",
+    "client_id": "robotarm-web-controller"
+  },
+  "topics": {
+    "command": "robotarm/command",
+    "pid": "robotarm/pid",
+    "mode": "robotarm/mode",
+    "telemetry": "robotarm/telemetry",
+    "ack": "robotarm/ack"
+  }
+}

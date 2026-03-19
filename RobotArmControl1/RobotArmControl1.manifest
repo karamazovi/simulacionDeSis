@@ -1,0 +1,10 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "josem",
+    "description": {
+        "": "Control de brazo robotico para Fusion 360"
+    },
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}

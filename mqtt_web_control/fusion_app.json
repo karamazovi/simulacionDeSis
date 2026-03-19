@@ -1,0 +1,15 @@
+{
+  "name": "FusionMqttBridge",
+  "type": "fusion-script",
+  "location": "FusionMqttBridge",
+  "description": "Script standalone de Fusion que aplica comandos MQTT JSON directamente",
+  "depends_on": [],
+  "mode": "standalone",
+  "mqtt_topics": {
+    "command": "robotarm/command",
+    "pid": "robotarm/pid",
+    "mode": "robotarm/mode",
+    "telemetry": "robotarm/telemetry",
+    "ack": "robotarm/ack"
+  }
+}

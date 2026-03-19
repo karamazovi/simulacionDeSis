@@ -1,0 +1,1 @@
+Archivos de LaTeX y dependencias movidos desde la raíz del proyecto. Mantener aquí todos los archivos relacionados con la documentación y presentaciones.

@@ -1,0 +1,8 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "josem",
+    "description": { "": "Diagnostico de joints y MQTT" },
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}

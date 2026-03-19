@@ -1,0 +1,36 @@
+{
+  "joints": {
+    "endpoint": "/api/joints",
+    "method": "POST",
+    "payload": {
+      "joints": {
+        "JointBase": -20.0,
+        "JointHombro": 15.0,
+        "JointCodo": -10.0
+      }
+    }
+  },
+  "pid": {
+    "endpoint": "/api/pid",
+    "method": "POST",
+    "payload": {
+      "joint": "JointBase",
+      "enabled": true,
+      "kp": 2.0,
+      "ki": 0.15,
+      "kd": 0.08,
+      "setpoint": -10.0,
+      "ramp_time_s": 0.0,
+      "ramp_cycles": 80,
+      "tolerance_deg": 0.6,
+      "settle_cycles": 3
+    }
+  },
+  "mode": {
+    "endpoint": "/api/mode",
+    "method": "POST",
+    "payload": {
+      "mode": "stop"
+    }
+  }
+}

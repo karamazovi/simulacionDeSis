@@ -1,0 +1,10 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "josem",
+    "description": {
+        "": "Puente MQTT standalone para controlar juntas de Fusion por topics JSON. Dashboard basico: ejecutar basic_dashboard.py con Streamlit (puerto 8500)."
+    },
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}
