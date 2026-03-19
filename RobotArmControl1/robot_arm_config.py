@@ -2,9 +2,9 @@
 
 JOINTS_CONFIG = {
     "JointBase": {
-        "min": -182,
-        "max": -2,
-        "default": -2,
+        "min": -180,
+        "max": 180,
+        "default": 0,
         "label": "Base",
         "color": "#89b4fa",
         # Angulo de referencia respecto a la linea roja: ref = joint + offset.
