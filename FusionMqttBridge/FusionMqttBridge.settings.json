@@ -5,7 +5,8 @@
   },
   "temas": {
     "comando": "robotarm/command",
-    "modo": "robotarm/mode"
+    "modo": "robotarm/mode",
+    "pid": "robotarm/pid"
   },
   "juntas": {
     "JointBase":   { "min": -180.0, "max": 180.0, "default": 0.0 },
