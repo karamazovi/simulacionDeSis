@@ -1,0 +1,8 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "josem",
+    "description": { "": "Script Fusion 360 para mqtt_web_control. Conecta juntas al broker MQTT." },
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}

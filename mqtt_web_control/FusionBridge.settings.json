@@ -1,0 +1,16 @@
+{
+  "mqtt": {
+    "host": "127.0.0.1",
+    "port": 1883
+  },
+  "temas": {
+    "comando": "robotarm/command",
+    "modo": "robotarm/mode",
+    "pid": "robotarm/pid"
+  },
+  "juntas": {
+    "JointBase":   { "min": -180.0, "max": 180.0, "default": 0.0 },
+    "JointHombro": { "min": -90.0,  "max": 90.0,  "default": 0.0 },
+    "JointCodo":   { "min": -135.0, "max": 135.0, "default": 0.0 }
+  }
+}
