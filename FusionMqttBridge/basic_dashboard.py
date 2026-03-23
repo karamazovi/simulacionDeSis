@@ -36,10 +36,10 @@ CONFIG_BROKER = {
             "bind": "0.0.0.0:1883",
         },
     },
-    "timeout-disconnect-delay": 2,
     "auth": {
         "allow-anonymous": True,
     },
+    "sys_interval": 0,
 }
 
 

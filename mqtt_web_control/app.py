@@ -22,8 +22,8 @@ except ImportError:
 
 _CONFIG_BROKER = {
     "listeners": {"default": {"type": "tcp", "bind": f"0.0.0.0:{Configuracion.MQTT_PORT}"}},
-    "timeout-disconnect-delay": 2,
     "auth": {"allow-anonymous": True},
+    "sys_interval": 0,
 }
 
 

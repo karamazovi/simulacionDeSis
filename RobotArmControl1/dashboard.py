@@ -28,8 +28,8 @@ except ImportError:
 
 CONFIG_BROKER = {
     "listeners": {"default": {"type": "tcp", "bind": "0.0.0.0:1883"}},
-    "timeout-disconnect-delay": 2,
     "auth": {"allow-anonymous": True},
+    "sys_interval": 0,
 }
 
 # ── Configuracion de juntas (debe coincidir con robot_arm_config.py) ──────────
