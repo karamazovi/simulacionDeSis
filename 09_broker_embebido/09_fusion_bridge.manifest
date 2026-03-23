@@ -1,0 +1,8 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "clase",
+    "description": {"": "Ejemplo 09 - Bridge completo con soporte PID y control directo."},
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}

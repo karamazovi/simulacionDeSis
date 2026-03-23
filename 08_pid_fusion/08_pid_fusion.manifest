@@ -1,0 +1,8 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "clase",
+    "description": {"": "Ejemplo 08 - PID controlando juntas de Fusion desde dashboard web."},
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}

@@ -1,0 +1,8 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "clase",
+    "description": {"": "Ejemplo 06 - Recibe comandos del dashboard y mueve las 3 juntas."},
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}

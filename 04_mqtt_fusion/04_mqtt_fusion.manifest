@@ -1,0 +1,10 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "clase",
+    "description": {
+        "": "Ejemplo 04 - Recibe un comando MQTT y mueve JointBase."
+    },
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}
